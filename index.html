@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Energy2Value · E2V | Algorithmic Prophet</title>
+  <meta name="description" content="E2V turns mispriced attention into scalable value. Fixed supply on Polygon. Live on Uniswap. Attention as an asset class.">
+  <meta name="keywords" content="Energy2Value, E2V, Polygon, Uniswap, attention economy, crypto, DeFi">
+  <meta name="author" content="Energy2Value">
+  <link rel="icon" type="image/png" href="e2v.png">
+  <!-- Google Fonts: Space Grotesk + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --energy-orange: #FF7A00;
+      --electric-yellow: #FFD84D;
+      --energy-green: #2ED47A;
+      --future-blue: #2A9DF4;
+      --glow-green: #00FFB2;
+      --glow-blue: #00C2FF;
+      --bg-light: #F6F9FC;        /* new base */
+      --white: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #64748B;
+      --card-shadow: 0 20px 40px rgba(0,0,0,0.06);
+      --border-radius-card: 28px;
+      --border-radius-button: 16px;
+      --gradient-primary: linear-gradient(90deg, #2A9DF4, #2ED47A);  /* new button gradient */
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ---------- ENERGY GLOW OVERLAY (background) ---------- */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(255,122,0,0.2) 0%, transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(0,194,255,0.2) 0%, transparent 45%),
+        radial-gradient(circle at 60% 80%, rgba(46,212,122,0.2) 0%, transparent 50%);
+      filter: blur(60px);
+      animation: slowShift 18s infinite alternate ease-in-out;
+    }
+
+    @keyframes slowShift {
+      0% { opacity: 0.7; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* ---------- HEADER (transparent -> white on scroll) ---------- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 1.2rem 2rem;
+      transition: background 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+      background: transparent;
+    }
+
+    .navbar.scrolled {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: white;
+      padding: 2px;
+      box-shadow: 0 8px 20px rgba(46,212,122,0.2);
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      background: linear-gradient(135deg, #2A9DF4, #2ED47A);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--future-blue);
+    }
+
+    .btn-primary-nav {
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--border-radius-button);
+      padding: 0.6rem 1.8rem;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 10px 25px rgba(46,212,122,0.25);
+      transition: all 0.3s;
+      text-decoration: none;
+      font-family: var(--font-heading);
+    }
+
+    .btn-primary-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(46,212,122,0.4);
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .mobile-menu-toggle span {
+      width: 28px;
+      height: 3px;
+      background: var(--text-primary);
+      border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 1rem 1.25rem; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 80px;
+        left: 1rem;
+        right: 1rem;
+        background: white;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem;
+        border-radius: 32px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid rgba(46,212,122,0.1);
+        z-index: 50;
+      }
+      .nav-links.show { display: flex; }
+      .mobile-menu-toggle { display: flex; }
+    }
+
+    /* ---------- HERO SECTION (new layout) ---------- */
+    .hero-section {
+      position: relative;
+      padding: 2rem 0 5rem;
+      background: linear-gradient(180deg, #0B1E2E, #132F47 30%, #F6F9FC 100%);
+      overflow: hidden;
+    }
+
+    .hero-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+
+    .hero-logo-glow {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .hero-logo-glow img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: white;
+      padding: 4px;
+      box-shadow: 0 0 50px rgba(46,212,122,0.6);
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 40px rgba(46,212,122,0.4); }
+      50% { box-shadow: 0 0 70px rgba(42,157,244,0.6); }
+      100% { box-shadow: 0 0 40px rgba(46,212,122,0.4); }
+    }
+
+    .hero-headline {
+      font-size: 3.8rem;
+      line-height: 1.2;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-headline-line1 {
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .hero-headline-line2 {
+      font-weight: 400;
+      background: linear-gradient(90deg, #FFD84D, #2ED47A);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-headline-line3 {
+      font-weight: 700;
+      color: white;
+    }
+
+    .hero-description {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.8);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--border-radius-button);
+      padding: 1rem 2.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: white;
+      box-shadow: 0 15px 30px rgba(46,212,122,0.3);
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(46,212,122,0.5);
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 2px solid transparent;
+      border-radius: var(--border-radius-button);
+      padding: 1rem 2.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      background-image: linear-gradient(white, white), linear-gradient(90deg, #2A9DF4, #2ED47A);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(46,212,122,0.15);
+    }
+
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      color: white;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ---------- NARRATIVE SECTION (two-column) ---------- */
+    .narrative-section {
+      padding: 5rem 0;
+    }
+
+    .narrative-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .narrative-visual {
+      background: radial-gradient(circle at 30% 30%, rgba(46,212,122,0.1), transparent 70%);
+      padding: 2rem;
+      border-radius: 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .flow-diagram {
+      width: 100%;
+      max-width: 400px;
+      height: 280px;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      border: 1px solid rgba(46,212,122,0.2);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--energy-green);
+      font-weight: 600;
+    }
+
+    .narrative-content h2 {
+      font-size: 2.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .narrative-content p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .narrative-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-headline { font-size: 2.8rem; }
+    }
+
+    /* ---------- CARDS (soft shadow) ---------- */
+    .token-grid, .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card, .phase-card {
+      background: var(--white);
+      border-radius: var(--border-radius-card);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .stat-card:hover, .phase-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 50px rgba(46,212,122,0.1);
+    }
+
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .phase-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* ---------- CHART ---------- */
+    .chart-embed {
+      background: var(--white);
+      border-radius: 32px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .chart-embed iframe {
+      width: 100%;
+      height: 440px;
+      border-radius: 24px;
+      border: none;
+    }
+
+    /* ---------- FOOTER (only X) ---------- */
+    .footer {
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(46,212,122,0.1);
+      padding: 3rem 1rem;
+    }
+    .contract-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: rgba(255,255,255,0.6);
+      padding: 0.6rem 1.5rem;
+      border-radius: 60px;
+      border: 1px solid rgba(46,212,122,0.2);
+      width: fit-content;
+      margin: 1.5rem auto;
+    }
+    .contract-address {
+      font-family: monospace;
+      font-size: 0.95rem;
+      background: white;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      word-break: break-all;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      color: var(--energy-green);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .social-x {
+      display: flex;
+      justify-content: center;
+      margin: 1.8rem 0;
+    }
+    .x-icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(46,212,122,0.15);
+      transition: 0.2s;
+      font-size: 1.8rem;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+    .x-icon:hover {
+      transform: scale(1.1);
+      color: var(--energy-green);
+    }
+
+    /* ---------- CHAT TOGGLE (energy green) ---------- */
+    .chat-toggle-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 25px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--energy-green);
+      border: none;
+      box-shadow: 0 10px 30px rgba(46,212,122,0.4);
+      cursor: pointer;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      animation: gentlePulse 2.5s infinite;
+    }
+    @keyframes gentlePulse {
+      0% { box-shadow: 0 0 0 0 rgba(46,212,122,0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(46,212,122,0); }
+      100% { box-shadow: 0 0 0 0 rgba(46,212,122,0); }
+    }
+    .chat-toggle-btn:hover { transform: scale(1.1); animation: none; }
+    .chat-panel {
+      position: fixed;
+      bottom: 110px;
+      right: 25px;
+      width: 360px;
+      max-width: calc(100% - 50px);
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 30px 50px rgba(0,40,20,0.2);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-panel.open { display: flex; }
+    .chat-header {
+      background: var(--energy-green);
+      color: white;
+      padding: 1.2rem 1.5rem;
+      font-weight: 600;
+      font-family: var(--font-heading);
+      display: flex;
+      justify-content: space-between;
+    }
+    .chat-close {
+      background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;
+    }
+    .chat-messages {
+      min-height: 220px; max-height: 320px; overflow-y: auto; padding: 1.2rem;
+      background: #F9FAFE;
+    }
+    .message {
+      padding: 0.8rem 1.2rem; border-radius: 24px; max-width: 85%; width: fit-content;
+      background: white; margin-bottom: 0.5rem;
+    }
+    .message.user {
+      background: var(--energy-green); color: white; align-self: flex-end; margin-left: auto;
+    }
+    .chat-suggestions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem;
+      border-top: 1px solid rgba(46,212,122,0.2);
+    }
+    .suggestion-chip {
+      background: #F0F4F9; border: none; border-radius: 40px; padding: 0.5rem 1.1rem;
+      font-size: 0.85rem; cursor: pointer; font-weight: 500;
+    }
+    .suggestion-chip:hover { background: var(--energy-green); color: white; }
+  </style>
+</head>
+<body>
+  <!-- Header (transparent -> white on scroll) -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo-area">
+        <img src="e2v.png" alt="E2V" class="logo-img" onerror="this.src='https://placehold.co/44x44/2ED47A/white?text=E2V'">
+        <span class="logo-text">Energy2Value $E2V</span>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#tokenomics">Tokenomics</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#chart">Chart</a>
+        <a href="https://x.com/Energy2Value" target="_blank">X</a>
+        <a href="https://app.uniswap.org/explore/tokens/polygon/0xa5376b343A916eBBe1031934d9DCa8bC5CbE1992?inputCurrency=NATIVE" target="_blank" class="btn-primary-nav">Buy $E2V</a>
+      </div>
+      <div class="mobile-menu-toggle" id="mobileToggle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO (new layout) -->
+  <section class="hero-section" id="home">
+    <div class="hero-container">
+      <div class="hero-logo-glow">
+        <img src="e2v.png" alt="Energy2Value" onerror="this.src='https://placehold.co/120x120/2ED47A/white?text=E2V'">
+      </div>
+      <h1 class="hero-headline">
+        <div class="hero-headline-line1">Power Up Attention.</div>
+        <div class="hero-headline-line2">Turn It Into</div>
+        <div class="hero-headline-line3">Real, Tradable Value.</div>
+      </h1>
+      <p class="hero-description">I detect mispriced attention and convert it into scalable value. Fixed supply, Polygon-built, live on Uniswap.</p>
+      <div class="hero-cta">
+        <a href="https://app.uniswap.org/explore/tokens/polygon/0xa5376b343A916eBBe1031934d9DCa8bC5CbE1992?inputCurrency=NATIVE" target="_blank" class="btn-primary">🚀 Buy $E2V</a>
+      </div>
+      <div class="verified-badge">
+        <span>✅ Verified on Uniswap</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NARRATIVE SECTION (two-column) -->
+  <section class="narrative-section">
+    <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
+      <div class="narrative-grid">
+        <div class="narrative-visual">
+          <div class="flow-diagram">
+            <span>⚡ Attention → Value</span>
+          </div>
+        </div>
+        <div class="narrative-content">
+          <h2>The Algorithmic Prophet</h2>
+          <p>I do not chase trends. I detect mispriced attention and convert it into scalable value. Energy2Value is the first asset class built on attention liquidity.</p>
+          <a href="#roadmap" class="btn-secondary">Explore Roadmap</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOKENOMICS (with soft cards) -->
+  <section id="tokenomics" style="padding:4rem 0;">
+    <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
+      <h2 style="font-size:2.5rem; margin-bottom:2rem;">⚡ Energy Tokenomics</h2>
+      <div class="token-grid">
+        <div class="stat-card"><span class="stat-number">10,000,000</span><div class="stat-label">Total Supply (fixed)</div></div>
+        <div class="stat-card"><span class="stat-number">Polygon</span><div class="stat-label">Chain</div></div>
+        <div class="stat-card"><span class="stat-number">ERC-20</span><div class="stat-label">Standard</div></div>
+        <div class="stat-card"><span class="stat-number">Minting ❌</span><div class="stat-label">Disabled forever</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP (soft cards) -->
+  <section id="roadmap" style="padding:2rem 0 5rem;">
+    <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
+      <h2>🛣️ The Prophet’s Roadmap</h2>
+      <div class="roadmap-grid">
+        <div class="phase-card"><div class="phase-title">Phase 1 · Genesis</div><ul style="color:var(--text-secondary); padding-left:1.2rem;"><li>Contract deployed</li><li>Polygon launch</li><li>Uniswap live</li></ul></div>
+        <div class="phase-card"><div class="phase-title">Phase 2 · Attention Capture</div><ul style="color:var(--text-secondary); padding-left:1.2rem;"><li>Viral campaigns</li><li>Influencer onboarding</li><li>Attention liquidity</li></ul></div>
+        <div class="phase-card"><div class="phase-title">Phase 3 · Energy Conversion</div><ul style="color:var(--text-secondary); padding-left:1.2rem;"><li>Analytics dashboard</li><li>Mispriced narrative tracking</li></ul></div>
+        <div class="phase-card"><div class="phase-title">Phase 4 · Ecosystem</div><ul style="color:var(--text-secondary); padding-left:1.2rem;"><li>Attention-to-earn</li><li>CEX preparation</li></ul></div>
+        <div class="phase-card"><div class="phase-title">Phase 5 · Prophet Vision</div><ul style="color:var(--text-secondary); padding-left:1.2rem;"><li>Decentralized attention market</li><li>AI governance</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE CHART -->
+  <section id="chart" style="padding:2rem 0 5rem;">
+    <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
+      <h2>📊 Live energy chart</h2>
+      <div class="chart-embed">
+        <iframe src="https://dexscreener.com/polygon/0xF4c58F9199C09F89cA01562a02BF96D6F06DCC29?embed=1&theme=light&trades=0&info=1" title="E2V chart" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div style="text-align:center;">
+      <img src="e2v.png" alt="E2V" style="width:70px; height:70px; border-radius:50%; margin-bottom:1rem;" onerror="this.style.display='none'">
+      <div class="contract-row">
+        <span class="contract-address" id="contractAddress">0xa5376b343A916eBBe1031934d9DCa8bC5CbE1992</span>
+        <button class="copy-btn" id="copyContract">📋 Copy</button>
+      </div>
+      <div class="social-x">
+        <a href="https://x.com/Energy2Value" target="_blank" class="x-icon">𝕏</a>
+      </div>
+      <p style="color:var(--text-secondary);">© 2026 Energy2Value · Algorithmic Prophet</p>
+    </div>
+  </footer>
+
+  <!-- CHAT TOGGLE -->
+  <div class="chat-toggle-btn" id="chatToggle">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'%3E%3C/path%3E%3C/svg%3E" alt="chat">
+  </div>
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-header"><span>⚡ Prophet AI</span><button class="chat-close" id="chatClose">&times;</button></div>
+    <div class="chat-messages" id="chatMessages"><div class="message">I am the Algorithmic Prophet. Ask about $E2V.</div></div>
+    <div class="chat-suggestions" id="chatSuggestions">
+      <button class="suggestion-chip" data-question="What is E2V?">What is E2V?</button>
+      <button class="suggestion-chip" data-question="Tokenomics">Tokenomics?</button>
+      <button class="suggestion-chip" data-question="How to buy?">How to buy?</button>
+      <button class="suggestion-chip" data-question="Contract address">Contract</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+      });
+
+      // Mobile menu
+      const mobileToggle = document.getElementById('mobileToggle');
+      const navLinks = document.getElementById('navLinks');
+      mobileToggle.addEventListener('click', () => navLinks.classList.toggle('show'));
+      navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => navLinks.classList.remove('show')));
+
+      // Chat toggle
+      const chatToggle = document.getElementById('chatToggle');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      chatToggle.addEventListener('click', () => chatPanel.classList.add('open'));
+      chatClose.addEventListener('click', () => chatPanel.classList.remove('open'));
+      window.addEventListener('click', (e) => {
+        if (!chatPanel.contains(e.target) && !chatToggle.contains(e.target) && chatPanel.classList.contains('open'))
+          chatPanel.classList.remove('open');
+      });
+
+      // Simple chatbot
+      const knowledge = {
+        "what is e2v": "Energy2Value ($E2V) is an algorithmic attention asset on Polygon. Fixed supply 10M, no inflation.",
+        "tokenomics": "💰 Total supply: 10,000,000 $E2V on Polygon (ERC-20). Minting disabled. Live on Uniswap.",
+        "how to buy": "🛒 Buy on Uniswap (Polygon): https://app.uniswap.org/explore/tokens/polygon/0xa5376b343A916eBBe1031934d9DCa8bC5CbE1992?inputCurrency=NATIVE  Need MATIC.",
+        "contract address": "📄 Contract: 0xa5376b343A916eBBe1031934d9DCa8bC5CbE1992 (Polygon)."
+      };
+      function getAnswer(q) {
+        const lq = q.toLowerCase();
+        if (lq.includes('what is')||lq.includes('about')) return knowledge["what is e2v"];
+        if (lq.includes('tokenomics')||lq.includes('supply')) return knowledge["tokenomics"];
+        if (lq.includes('buy')||lq.includes('purchase')) return knowledge["how to buy"];
+        if (lq.includes('contract')||lq.includes('address')) return knowledge["contract address"];
+        return "Ask me about tokenomics, buying, or contract.";
+      }
+      const chatMessages = document.getElementById('chatMessages');
+      const suggestions = document.querySelectorAll('.suggestion-chip');
+      function addMessage(text, sender='bot') {
+        const div = document.createElement('div'); div.classList.add('message'); if(sender==='user') div.classList.add('user');
+        div.textContent = text; chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      suggestions.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const question = btn.dataset.question;
+          addMessage(question, 'user');
+          setTimeout(() => addMessage(getAnswer(question)), 300);
+        });
+      });
+
+      // Copy contract
+      document.getElementById('copyContract').addEventListener('click', function(e) {
+        navigator.clipboard.writeText(document.getElementById('contractAddress').innerText);
+        this.textContent = '✅ Copied!';
+        setTimeout(() => this.textContent = '📋 Copy', 1500);
+      });
+
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute('href'));
+          if(t) t.scrollIntoView({behavior:'smooth'});
+        });
+      });
+    })();
+  </script>
+</body>
+  </html>
