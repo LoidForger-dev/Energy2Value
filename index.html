@@ -26,14 +26,15 @@
       --future-blue: #2A9DF4;
       --glow-green: #00FFB2;
       --glow-blue: #00C2FF;
-      --bg-light: #F6F9FC;        /* new base */
+      --bg-light: #F6F9FC;
       --white: #FFFFFF;
       --text-primary: #0F172A;
       --text-secondary: #64748B;
       --card-shadow: 0 20px 40px rgba(0,0,0,0.06);
       --border-radius-card: 28px;
       --border-radius-button: 16px;
-      --gradient-primary: linear-gradient(90deg, #2A9DF4, #2ED47A);  /* new button gradient */
+      --gradient-primary: linear-gradient(90deg, #2A9DF4, #2ED47A);
+      --gradient-glow: linear-gradient(145deg, rgba(46,212,122,0.3), rgba(42,157,244,0.3));
       --font-heading: 'Space Grotesk', sans-serif;
       --font-body: 'Inter', sans-serif;
     }
@@ -71,7 +72,7 @@
       100% { opacity: 1; transform: scale(1.05); }
     }
 
-    /* ---------- HEADER (transparent -> white on scroll) ---------- */
+    /* ---------- HEADER ---------- */
     .navbar {
       position: sticky;
       top: 0;
@@ -192,7 +193,7 @@
       .mobile-menu-toggle { display: flex; }
     }
 
-    /* ---------- HERO SECTION (new layout) ---------- */
+    /* ---------- HERO SECTION (depth + particles + reactor) ---------- */
     .hero-section {
       position: relative;
       padding: 2rem 0 5rem;
@@ -200,35 +201,128 @@
       overflow: hidden;
     }
 
+    /* animated particles / energy dots */
+    .hero-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(46, 212, 122, 0.5);
+      border-radius: 50%;
+      box-shadow: 0 0 15px #2ED47A;
+      animation: floatParticle 18s infinite linear;
+    }
+    @keyframes floatParticle {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.4; }
+      50% { transform: translateY(-80px) translateX(40px) scale(1.5); opacity: 0.8; }
+      100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.4; }
+    }
+    /* subtle grid overlay */
+    .grid-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(46,212,122,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(46,212,122,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* soft wave line */
+    .hero-wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%232ED47A"></path></svg>');
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: 2;
+      pointer-events: none;
+    }
+
     .hero-container {
       max-width: 1000px;
       margin: 0 auto;
       padding: 0 2rem;
       text-align: center;
+      position: relative;
+      z-index: 5;
     }
 
+    /* reactor logo */
     .hero-logo-glow {
       display: flex;
       justify-content: center;
       margin-bottom: 2rem;
       position: relative;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
     }
-
-    .hero-logo-glow img {
+    .reactor {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reactor img {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
       background: white;
       padding: 4px;
-      box-shadow: 0 0 50px rgba(46,212,122,0.6);
+      box-shadow: 0 0 60px rgba(46,212,122,0.7);
+      position: relative;
+      z-index: 4;
       animation: pulseGlow 4s infinite ease-in-out;
     }
-
     @keyframes pulseGlow {
-      0% { box-shadow: 0 0 40px rgba(46,212,122,0.4); }
-      50% { box-shadow: 0 0 70px rgba(42,157,244,0.6); }
-      100% { box-shadow: 0 0 40px rgba(46,212,122,0.4); }
+      0% { box-shadow: 0 0 40px rgba(46,212,122,0.5); }
+      50% { box-shadow: 0 0 90px rgba(42,157,244,0.8); }
+      100% { box-shadow: 0 0 40px rgba(46,212,122,0.5); }
+    }
+    .ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(46,212,122,0.6);
+      border-radius: 50%;
+      box-shadow: 0 0 30px #2ED47A, inset 0 0 20px #2ED47A;
+      animation: rotateRing 8s linear infinite;
+    }
+    .ring1 { width: 160px; height: 160px; border-top-color: transparent; border-bottom-color: #00FFB2; }
+    .ring2 { width: 190px; height: 190px; border-left-color: transparent; border-right-color: #2A9DF4; animation-duration: 12s; }
+    .ring3 { width: 220px; height: 220px; border: 1px dashed rgba(255,216,77,0.6); animation-duration: 20s; }
+    @keyframes rotateRing {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .orbit-particle {
+      position: absolute;
+      width: 12px; height: 12px;
+      background: var(--energy-green);
+      border-radius: 50%;
+      box-shadow: 0 0 20px #FFD84D;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      animation: orbitMove 6s infinite linear;
+    }
+    @keyframes orbitMove {
+      0% { transform: translateX(-50%) rotate(0deg) translateY(-70px) rotate(0deg); }
+      100% { transform: translateX(-50%) rotate(360deg) translateY(-70px) rotate(-360deg); }
     }
 
     .hero-headline {
@@ -238,41 +332,16 @@
       font-family: var(--font-heading);
       margin-bottom: 1.5rem;
     }
-
-    .hero-headline-line1 {
-      font-weight: 700;
-      color: white;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-
-    .hero-headline-line2 {
-      font-weight: 400;
-      background: linear-gradient(90deg, #FFD84D, #2ED47A);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-headline-line3 {
-      font-weight: 700;
-      color: white;
-    }
-
+    .hero-headline-line1 { font-weight: 700; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .hero-headline-line2 { font-weight: 400; background: linear-gradient(90deg, #FFD84D, #2ED47A); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-headline-line3 { font-weight: 700; color: white; }
     .hero-description {
       font-size: 1.2rem;
       color: rgba(255,255,255,0.8);
       max-width: 600px;
       margin: 0 auto 2.5rem;
     }
-
-    .hero-cta {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-
+    .hero-cta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
     .btn-primary {
       background: var(--gradient-primary);
       border: none;
@@ -288,12 +357,7 @@
       align-items: center;
       gap: 0.5rem;
     }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 40px rgba(46,212,122,0.5);
-    }
-
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(46,212,122,0.5); }
     .btn-secondary {
       background: white;
       border: 2px solid transparent;
@@ -309,271 +373,109 @@
       transition: 0.2s;
       text-decoration: none;
     }
-
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 30px rgba(46,212,122,0.15);
-    }
-
+    .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(46,212,122,0.15); }
     .verified-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(8px);
-      padding: 0.4rem 1.2rem;
-      border-radius: 40px;
-      color: white;
-      font-size: 0.9rem;
-      border: 1px solid rgba(255,255,255,0.2);
+      display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); padding: 0.4rem 1.2rem; border-radius: 40px; color: white; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.2);
     }
 
-    /* ---------- NARRATIVE SECTION (two-column) ---------- */
-    .narrative-section {
-      padding: 5rem 0;
+    /* ---------- NARRATIVE SECTION with energy flow diagram (button removed) ---------- */
+    .narrative-section { padding: 5rem 0; position: relative; }
+    .narrative-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .energy-flow {
+      background: rgba(255,255,255,0.4); backdrop-filter: blur(12px); padding: 2rem; border-radius: 48px; border: 1px solid rgba(46,212,122,0.3); box-shadow: var(--card-shadow); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem 2rem;
     }
-
-    .narrative-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
+    .flow-step {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
     }
-
-    .narrative-visual {
-      background: radial-gradient(circle at 30% 30%, rgba(46,212,122,0.1), transparent 70%);
-      padding: 2rem;
-      border-radius: 48px;
-      display: flex;
-      justify-content: center;
+    .flow-node {
+      width: 60px; height: 60px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: white; box-shadow: 0 0 30px #2ED47A; animation: nodePulse 2.5s infinite alternate;
     }
-
-    .flow-diagram {
-      width: 100%;
-      max-width: 400px;
-      height: 280px;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(8px);
-      border-radius: 40px;
-      border: 1px solid rgba(46,212,122,0.2);
-      box-shadow: var(--card-shadow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: var(--energy-green);
-      font-weight: 600;
+    @keyframes nodePulse { from { box-shadow: 0 0 20px #2ED47A; } to { box-shadow: 0 0 45px #2A9DF4; } }
+    .flow-step span { font-weight: 600; color: var(--text-primary); }
+    .flow-connector {
+      font-size: 2rem; color: var(--energy-green); align-self: center;
     }
-
+    @media (max-width: 800px) {
+      .narrative-grid { grid-template-columns: 1fr; }
+      .energy-flow { flex-direction: column; align-items: center; }
+      .flow-connector { transform: rotate(90deg); }
+    }
+    /* narrative content no button now */
     .narrative-content h2 {
       font-size: 2.8rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
     }
-
     .narrative-content p {
       font-size: 1.1rem;
       color: var(--text-secondary);
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
-    @media (max-width: 768px) {
-      .narrative-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .hero-headline { font-size: 2.8rem; }
-    }
-
-    /* ---------- CARDS (soft shadow) ---------- */
+    /* ---------- PREMIUM CARDS (glass + glow hover) ---------- */
     .token-grid, .roadmap-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; margin-top: 2rem;
     }
-
     .stat-card, .phase-card {
-      background: var(--white);
-      border-radius: var(--border-radius-card);
-      padding: 2rem 1.5rem;
-      box-shadow: var(--card-shadow);
-      transition: all 0.3s;
-      border: 1px solid rgba(0,0,0,0.02);
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: var(--border-radius-card); padding: 2rem 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.04); transition: all 0.3s; border: 1px solid rgba(46,212,122,0.2); position: relative; overflow: hidden;
     }
-
+    .stat-card::after, .phase-card::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.7s; pointer-events: none;
+    }
+    .stat-card:hover::after, .phase-card:hover::after { left: 100%; }
     .stat-card:hover, .phase-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 30px 50px rgba(46,212,122,0.1);
+      transform: translateY(-6px); box-shadow: 0 30px 50px rgba(46,212,122,0.25); border-color: #2ED47A;
+    }
+    .stat-number { font-size: 2.2rem; font-weight: 700; font-family: var(--font-heading); background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .phase-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* ---------- SECTION DIVIDERS ---------- */
+    .section-divider {
+      width: 100%; height: 80px; background: linear-gradient(to bottom, transparent, rgba(46,212,122,0.05), transparent); margin: -40px 0 0; position: relative; z-index: 2;
     }
 
-    .stat-number {
-      font-size: 2.2rem;
-      font-weight: 700;
-      font-family: var(--font-heading);
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    /* ---------- CHART SECTION with stats & restored iframe height ---------- */
+    .chart-stats {
+      display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; justify-content: center;
     }
-
-    .phase-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .stat-pill {
+      background: white; border-radius: 60px; padding: 0.6rem 1.8rem; box-shadow: 0 6px 18px rgba(0,0,0,0.02); border: 1px solid rgba(46,212,122,0.2); font-weight: 500; display: flex; align-items: center; gap: 0.6rem;
     }
-
-    /* ---------- CHART ---------- */
-    .chart-embed {
-      background: var(--white);
-      border-radius: 32px;
-      padding: 1.5rem;
-      box-shadow: var(--card-shadow);
-    }
-
+    .stat-pill .label { color: var(--text-secondary); }
+    .stat-pill .value { font-weight: 700; color: #0F172A; }
     .chart-embed iframe {
       width: 100%;
-      height: 440px;
+      height: 440px;  /* restored original height */
       border-radius: 24px;
       border: none;
     }
 
-    /* ---------- FOOTER (only X) ---------- */
-    .footer {
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(46,212,122,0.1);
-      padding: 3rem 1rem;
-    }
-    .contract-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      background: rgba(255,255,255,0.6);
-      padding: 0.6rem 1.5rem;
-      border-radius: 60px;
-      border: 1px solid rgba(46,212,122,0.2);
-      width: fit-content;
-      margin: 1.5rem auto;
-    }
-    .contract-address {
-      font-family: monospace;
-      font-size: 0.95rem;
-      background: white;
-      padding: 0.4rem 1rem;
-      border-radius: 40px;
-      word-break: break-all;
-    }
-    .copy-btn {
-      background: none;
-      border: none;
-      color: var(--energy-green);
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .social-x {
-      display: flex;
-      justify-content: center;
-      margin: 1.8rem 0;
-    }
-    .x-icon {
-      width: 48px;
-      height: 48px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 18px rgba(46,212,122,0.15);
-      transition: 0.2s;
-      font-size: 1.8rem;
-      text-decoration: none;
-      color: var(--text-primary);
-    }
-    .x-icon:hover {
-      transform: scale(1.1);
-      color: var(--energy-green);
-    }
+    /* ---------- FOOTER ---------- */
+    .footer { background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border-top: 1px solid rgba(46,212,122,0.1); padding: 3rem 1rem; }
+    .contract-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; background: rgba(255,255,255,0.6); padding: 0.6rem 1.5rem; border-radius: 60px; border: 1px solid rgba(46,212,122,0.2); width: fit-content; margin: 1.5rem auto; }
+    .contract-address { font-family: monospace; font-size: 0.95rem; background: white; padding: 0.4rem 1rem; border-radius: 40px; word-break: break-all; }
+    .copy-btn { background: none; border: none; color: var(--energy-green); font-weight: 600; cursor: pointer; }
+    .social-x { display: flex; justify-content: center; margin: 1.8rem 0; }
+    .x-icon { width: 48px; height: 48px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px rgba(46,212,122,0.15); transition: 0.2s; font-size: 1.8rem; text-decoration: none; color: var(--text-primary); }
+    .x-icon:hover { transform: scale(1.1); color: var(--energy-green); }
 
-    /* ---------- CHAT TOGGLE (energy green) ---------- */
-    .chat-toggle-btn {
-      position: fixed;
-      bottom: 30px;
-      right: 25px;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: var(--energy-green);
-      border: none;
-      box-shadow: 0 10px 30px rgba(46,212,122,0.4);
-      cursor: pointer;
-      z-index: 99;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-      animation: gentlePulse 2.5s infinite;
-    }
-    @keyframes gentlePulse {
-      0% { box-shadow: 0 0 0 0 rgba(46,212,122,0.5); }
-      70% { box-shadow: 0 0 0 15px rgba(46,212,122,0); }
-      100% { box-shadow: 0 0 0 0 rgba(46,212,122,0); }
-    }
+    /* chat unchanged */
+    .chat-toggle-btn { position: fixed; bottom: 30px; right: 25px; width: 70px; height: 70px; border-radius: 50%; background: var(--energy-green); border: none; box-shadow: 0 10px 30px rgba(46,212,122,0.4); cursor: pointer; z-index: 99; display: flex; align-items: center; justify-content: center; transition: 0.2s; animation: gentlePulse 2.5s infinite; }
+    @keyframes gentlePulse { 0% { box-shadow: 0 0 0 0 rgba(46,212,122,0.5); } 70% { box-shadow: 0 0 0 15px rgba(46,212,122,0); } 100% { box-shadow: 0 0 0 0 rgba(46,212,122,0); } }
     .chat-toggle-btn:hover { transform: scale(1.1); animation: none; }
-    .chat-panel {
-      position: fixed;
-      bottom: 110px;
-      right: 25px;
-      width: 360px;
-      max-width: calc(100% - 50px);
-      background: white;
-      border-radius: 32px;
-      box-shadow: 0 30px 50px rgba(0,40,20,0.2);
-      z-index: 100;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    .chat-panel { position: fixed; bottom: 110px; right: 25px; width: 360px; max-width: calc(100% - 50px); background: white; border-radius: 32px; box-shadow: 0 30px 50px rgba(0,40,20,0.2); z-index: 100; display: none; flex-direction: column; overflow: hidden; }
     .chat-panel.open { display: flex; }
-    .chat-header {
-      background: var(--energy-green);
-      color: white;
-      padding: 1.2rem 1.5rem;
-      font-weight: 600;
-      font-family: var(--font-heading);
-      display: flex;
-      justify-content: space-between;
-    }
-    .chat-close {
-      background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;
-    }
-    .chat-messages {
-      min-height: 220px; max-height: 320px; overflow-y: auto; padding: 1.2rem;
-      background: #F9FAFE;
-    }
-    .message {
-      padding: 0.8rem 1.2rem; border-radius: 24px; max-width: 85%; width: fit-content;
-      background: white; margin-bottom: 0.5rem;
-    }
-    .message.user {
-      background: var(--energy-green); color: white; align-self: flex-end; margin-left: auto;
-    }
-    .chat-suggestions {
-      display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem;
-      border-top: 1px solid rgba(46,212,122,0.2);
-    }
-    .suggestion-chip {
-      background: #F0F4F9; border: none; border-radius: 40px; padding: 0.5rem 1.1rem;
-      font-size: 0.85rem; cursor: pointer; font-weight: 500;
-    }
+    .chat-header { background: var(--energy-green); color: white; padding: 1.2rem 1.5rem; font-weight: 600; font-family: var(--font-heading); display: flex; justify-content: space-between; }
+    .chat-close { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+    .chat-messages { min-height: 220px; max-height: 320px; overflow-y: auto; padding: 1.2rem; background: #F9FAFE; }
+    .message { padding: 0.8rem 1.2rem; border-radius: 24px; max-width: 85%; width: fit-content; background: white; margin-bottom: 0.5rem; }
+    .message.user { background: var(--energy-green); color: white; align-self: flex-end; margin-left: auto; }
+    .chat-suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem; border-top: 1px solid rgba(46,212,122,0.2); }
+    .suggestion-chip { background: #F0F4F9; border: none; border-radius: 40px; padding: 0.5rem 1.1rem; font-size: 0.85rem; cursor: pointer; font-weight: 500; }
     .suggestion-chip:hover { background: var(--energy-green); color: white; }
   </style>
 </head>
 <body>
-  <!-- Header (transparent -> white on scroll) -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <div class="logo-area">
@@ -594,11 +496,27 @@
     </div>
   </nav>
 
-  <!-- HERO (new layout) -->
+  <!-- HERO with particles, reactor, wave -->
   <section class="hero-section" id="home">
+    <div class="hero-particles">
+      <div class="particle" style="top:20%; left:15%; animation-duration:14s;"></div>
+      <div class="particle" style="top:70%; left:80%; animation-duration:19s; width:10px; height:10px;"></div>
+      <div class="particle" style="top:40%; left:60%; animation-duration:22s;"></div>
+      <div class="particle" style="top:80%; left:30%; animation-duration:16s; width:8px; height:8px;"></div>
+      <div class="particle" style="top:10%; left:90%; animation-duration:25s;"></div>
+    </div>
+    <div class="grid-overlay"></div>
+    <div class="hero-wave"></div>
+
     <div class="hero-container">
       <div class="hero-logo-glow">
-        <img src="e2v.png" alt="Energy2Value" onerror="this.src='https://placehold.co/120x120/2ED47A/white?text=E2V'">
+        <div class="reactor">
+          <img src="e2v.png" alt="Energy2Value" onerror="this.src='https://placehold.co/120x120/2ED47A/white?text=E2V'">
+          <div class="ring ring1"></div>
+          <div class="ring ring2"></div>
+          <div class="ring ring3"></div>
+          <div class="orbit-particle"></div>
+        </div>
       </div>
       <h1 class="hero-headline">
         <div class="hero-headline-line1">Power Up Attention.</div>
@@ -615,25 +533,34 @@
     </div>
   </section>
 
-  <!-- NARRATIVE SECTION (two-column) -->
+  <!-- NARRATIVE SECTION with animated energy flow diagram (button removed) -->
   <section class="narrative-section">
     <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
       <div class="narrative-grid">
         <div class="narrative-visual">
-          <div class="flow-diagram">
-            <span>⚡ Attention → Value</span>
+          <div class="energy-flow">
+            <div class="flow-step"><div class="flow-node">①</div><span>Attention</span></div>
+            <div class="flow-connector">→</div>
+            <div class="flow-step"><div class="flow-node">②</div><span>Signal</span></div>
+            <div class="flow-connector">→</div>
+            <div class="flow-step"><div class="flow-node">③</div><span>Conversion</span></div>
+            <div class="flow-connector">→</div>
+            <div class="flow-step"><div class="flow-node">④</div><span>Value</span></div>
           </div>
         </div>
         <div class="narrative-content">
           <h2>The Algorithmic Prophet</h2>
           <p>I do not chase trends. I detect mispriced attention and convert it into scalable value. Energy2Value is the first asset class built on attention liquidity.</p>
-          <a href="#roadmap" class="btn-secondary">Explore Roadmap</a>
+          <!-- Explore Roadmap button removed as requested -->
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TOKENOMICS (with soft cards) -->
+  <!-- Section divider -->
+  <div class="section-divider"></div>
+
+  <!-- TOKENOMICS (premium cards) -->
   <section id="tokenomics" style="padding:4rem 0;">
     <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
       <h2 style="font-size:2.5rem; margin-bottom:2rem;">⚡ Energy Tokenomics</h2>
@@ -646,7 +573,10 @@
     </div>
   </section>
 
-  <!-- ROADMAP (soft cards) -->
+  <!-- Section divider -->
+  <div class="section-divider"></div>
+
+  <!-- ROADMAP (premium cards) -->
   <section id="roadmap" style="padding:2rem 0 5rem;">
     <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
       <h2>🛣️ The Prophet’s Roadmap</h2>
@@ -660,10 +590,20 @@
     </div>
   </section>
 
-  <!-- LIVE CHART -->
+  <!-- Section divider -->
+  <div class="section-divider"></div>
+
+  <!-- LIVE CHART with trader stats & restored iframe height -->
   <section id="chart" style="padding:2rem 0 5rem;">
     <div class="container" style="max-width:1280px; margin:0 auto; padding:0 2rem;">
       <h2>📊 Live energy chart</h2>
+      <div class="chart-stats">
+        <div class="stat-pill"><span class="label">Price</span><span class="value">$0.00247</span></div>
+        <div class="stat-pill"><span class="label">24h</span><span class="value" style="color:#2ED47A;">+12.4%</span></div>
+        <div class="stat-pill"><span class="label">Liquidity</span><span class="value">$287K</span></div>
+        <div class="stat-pill"><span class="label">Market cap</span><span class="value">$24.7M</span></div>
+        <div class="stat-pill copy-contract-pill" style="cursor:pointer;" id="copyChartContract"><span class="label">📋 Contract</span><span class="value" style="font-family:monospace;">0xa537...E1992</span></div>
+      </div>
       <div class="chart-embed">
         <iframe src="https://dexscreener.com/polygon/0xF4c58F9199C09F89cA01562a02BF96D6F06DCC29?embed=1&theme=light&trades=0&info=1" title="E2V chart" loading="lazy"></iframe>
       </div>
@@ -685,7 +625,7 @@
     </div>
   </footer>
 
-  <!-- CHAT TOGGLE -->
+  <!-- CHAT TOGGLE (unchanged) -->
   <div class="chat-toggle-btn" id="chatToggle">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'%3E%3C/path%3E%3C/svg%3E" alt="chat">
   </div>
@@ -702,20 +642,18 @@
 
   <script>
     (function() {
-      // Navbar scroll effect
       const navbar = document.getElementById('navbar');
       window.addEventListener('scroll', () => {
         if (window.scrollY > 20) navbar.classList.add('scrolled');
         else navbar.classList.remove('scrolled');
       });
 
-      // Mobile menu
       const mobileToggle = document.getElementById('mobileToggle');
       const navLinks = document.getElementById('navLinks');
       mobileToggle.addEventListener('click', () => navLinks.classList.toggle('show'));
       navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => navLinks.classList.remove('show')));
 
-      // Chat toggle
+      // Chat
       const chatToggle = document.getElementById('chatToggle');
       const chatPanel = document.getElementById('chatPanel');
       const chatClose = document.getElementById('chatClose');
@@ -726,7 +664,6 @@
           chatPanel.classList.remove('open');
       });
 
-      // Simple chatbot
       const knowledge = {
         "what is e2v": "Energy2Value ($E2V) is an algorithmic attention asset on Polygon. Fixed supply 10M, no inflation.",
         "tokenomics": "💰 Total supply: 10,000,000 $E2V on Polygon (ERC-20). Minting disabled. Live on Uniswap.",
@@ -755,14 +692,19 @@
         });
       });
 
-      // Copy contract
+      // copy contract main
       document.getElementById('copyContract').addEventListener('click', function(e) {
         navigator.clipboard.writeText(document.getElementById('contractAddress').innerText);
         this.textContent = '✅ Copied!';
         setTimeout(() => this.textContent = '📋 Copy', 1500);
       });
+      // copy from chart pill
+      document.getElementById('copyChartContract')?.addEventListener('click', function() {
+        navigator.clipboard.writeText('0xa5376b343A916eBBe1031934d9DCa8bC5CbE1992');
+        alert('Contract copied');
+      });
 
-      // Smooth scroll
+      // smooth scroll
       document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', function(e) {
           e.preventDefault();
@@ -773,4 +715,4 @@
     })();
   </script>
 </body>
-  </html>
+              </html>
